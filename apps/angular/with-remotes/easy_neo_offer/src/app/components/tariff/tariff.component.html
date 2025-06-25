@@ -1,0 +1,16 @@
+<h2>Test Tariff geladen</h2>
+<h1>Ihre persönlichen TARIF-Daten</h1>
+
+<div>
+  <p>BASE_PATH-CONTENT</p>
+  <p>
+    <br>
+    {{ basePathContent | json }}
+  </p>
+
+  @let user = personName$ | async;
+
+  @if (user) {
+    <p>Aktueller Wert von User ist {{ user | json}}</p>
+  }
+</div>

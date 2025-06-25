@@ -1,0 +1,26 @@
+<h2>Test PersonalData geladen</h2>
+<h1>Ihre persönlichen Daten</h1>
+
+@if (cats) {
+  <div>
+    {{ cats | json }}
+  </div>
+  <br><br>
+}
+<br>
+<p>
+  Store-Test modelChange set to store:<br>
+  <input type="text" [(ngModel)]="personName" (input)="updatePersonalStore()">
+</p>
+
+@if (products) {
+  <p>
+    <br>
+    Über den Resolver hat ActivatedRoute den Wert: {{ products | json }}
+  </p>
+}
+
+<div>
+  <div class="bg-blue-700">Tailwind works by blue background</div>
+</div>
+
