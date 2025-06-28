@@ -1,12 +1,11 @@
 import { InjectionToken } from '@angular/core';
 
-import { AppRoute } from '../interfaces/app';
-import { APP_ROUTES } from '../constants/routes';
+import { CONFIGURATION } from '../../assets/env';
 
-export const BASE_PATH = new InjectionToken<AppRoute[]>(
+export const BASE_PATH = new InjectionToken<string>(
   'Application Routes Configuration',
   {
     providedIn: 'root',
-    factory: () => APP_ROUTES,
+    factory: () => CONFIGURATION.API_URL,
   }
 );

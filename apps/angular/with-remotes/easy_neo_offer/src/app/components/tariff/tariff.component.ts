@@ -14,7 +14,7 @@ import { TestTokenService } from '../../services/test-token.service';
 })
 export class TariffComponent implements OnInit {
   testTokenService = inject(TestTokenService);
-  basePathContent!: AppRoute[];
+  basePathContent!: string;
   personName$!: Observable<PersonState>;
 
   public ngOnInit(): void {

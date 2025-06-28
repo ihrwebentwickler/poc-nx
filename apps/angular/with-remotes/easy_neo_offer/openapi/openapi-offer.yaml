@@ -1,0 +1,1671 @@
+openapi: 3.0.3
+info:
+  description: This service manages all use cases that correspond to the 'offer' resources
+    in the easy 2.0 offering system
+  title: OfferService
+  version: "0.1"
+servers:
+  - description: DEV Stage
+    url: https://api-dev.easy.offer.hdi.de/v0.1
+  - description: TEST Stage
+    url: https://api-test.easy.offer.hdi.de/v0.1
+  - description: PROD Stage
+    url: https://api.easy.offer.hdi.de/v0.1
+security:
+  - BearerAuth: []
+tags:
+  - description: |-
+      ###### Offer management
+      ###### Angebotsverwaltung
+    name: offers
+paths:
+  /offers/personalData/{productType}:
+    get:
+      description: |-
+        ###### Provides default values for the personal data based on product type
+        ###### <u>Stellt Standardwerte für die Personendaten basierend auf dem Produkttyp bereit</u>
+      operationId: getDefaultPersonalData
+      parameters:
+        - description: product type
+          in: path
+          name: productType
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalDataResponse'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Provides default personal data
+      tags:
+        - offers
+  /offers/tariffData/{productType}:
+    get:
+      description: |-
+        ###### Provides default values for the tariff data based on product type
+        ###### <u>Stellt Standardwerte für die Tariffdaten basierend auf dem Produkttyp bereit</u>
+      operationId: getDefaultTariffData
+      parameters:
+        - description: product type
+          in: path
+          name: productType
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TariffDataResponse'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Provides default tariff data
+      tags:
+        - offers
+  /offers/personalData/validations:
+    post:
+      description: |-
+        ###### Validates personal data in the 'Occupational disability' tariff
+        ###### <u>Validiert die Personendaten im Tarif 'Berufsunfähigkeit'</u>
+      operationId: validatePersonalData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalDataValidation'
+        description: offer
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalDataResponse'
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Validates personal data
+      tags:
+        - offers
+  /offers/shortOfferData/validations:
+    post:
+      description: |-
+        ###### Validates short offer data
+        ###### <u>Validiert die Kurzangebotangaben</u>
+      operationId: validateShortOfferData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShortOfferData'
+        description: short offer
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortOfferData'
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Validates short offer data
+      tags:
+        - offers
+  /offers:
+    post:
+      description: |-
+        ###### Creates a new resource 'Offer' in the process context. This action takes place when the personal details of the offer are saved. The newly created resource is returned.
+        ###### <u>Erstellt eine neue Ressource 'Angebot' im Prozesskontext. Diese Aktion findet bei der Speicherung der Personenangaben des Angebotes statt. Die neu erstellte Ressource wird zurückgeliefert.</u>
+      operationId: createOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferRequest'
+        description: new offer
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferResponse'
+          description: Successful operation
+          headers:
+            Location:
+              description: URL of the newly created offer
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Create an offer
+      tags:
+        - offers
+  /offers/{offerId}:
+    get:
+      description: |-
+        ###### Provides the complete resource 'Offer' with all associated data such as personal and tariff details
+        ###### <u>Liefert die vollständige Ressource 'Angebot' mit allen damit verbundenen Daten wie persönliche und tarifflichen Angaben</u>
+      operationId: getOffer
+      parameters:
+        - description: ID of offer to return
+          in: path
+          name: offerId
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferResponse'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Find an offer
+      tags:
+        - offers
+    put:
+      description: |-
+        ###### Updates an offer
+        ###### <u>Aktualisiert ein Angebot</u>
+      operationId: updateOffer
+      parameters:
+        - description: ID of offer to update
+          in: path
+          name: offerId
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferRequest'
+        description: offer to update
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferResponse'
+          description: Successful operation
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Update an offer
+      tags:
+        - offers
+  /offers/calculations:
+    post:
+      description: |-
+        ###### Calculates an resource 'Offer' and returns the offer with calculated data
+        ###### <u>Berechnet eine Ressource 'Angebot' und liefert es mit dem Berechnungsergebnis zurück.</u>
+      operationId: calculateOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferCalculation'
+        description: offer to calculate
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferResponse'
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Calculate an offer
+      tags:
+        - offers
+  /offers/{offerId}/documents:
+    post:
+      description: |-
+        ###### Creates and returns a PDF document 'short offer' on an existing resource 'Offer'
+        ###### <u>Erstellt ein PDF Dokument 'Kurzangebot' an einer bestehenden Ressource 'Angebot' und liefert es zurück</u>
+      operationId: createOfferDocument
+      parameters:
+        - description: offer ID
+          explode: false
+          in: path
+          name: offerId
+          required: true
+          schema:
+            format: int64
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/pdf:
+              encoding: {}
+              schema:
+                format: binary
+                type: string
+          description: Successful operation
+          headers:
+            Content-Disposition:
+              description: Use 'inline' to view and 'attachment' to download the document
+              example: inline; filename="offer.pdf"
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Internal Server Error
+      summary: Create an offer PDF document
+      tags:
+        - offers
+components:
+  responses:
+    "401_Unauthorized":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+      description: Unauthorized
+    "500_InternalServerError":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+      description: Internal Server Error
+    "400_BadRequest":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+      description: Bad Request
+    "404_NotFound":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+      description: Resource Not Found
+  schemas:
+    PersonalDataResponse:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/PersonalDataOD'
+        propertyName: product_type
+      example:
+        product_type: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    PersonalDataOD:
+      allOf:
+        - $ref: '#/components/schemas/PersonalDataResponse'
+      description: |-
+        ###### Short offer
+        ###### <u>Angaben zum Kurzangebot</u> Persönliche Angaben zum Angebot
+      properties:
+        birth_date:
+          $ref: '#/components/schemas/DateAttribute'
+        gender:
+          $ref: '#/components/schemas/ListAttribute'
+        gross_annual_income:
+          $ref: '#/components/schemas/DoubleAttribute'
+        existing_insurances:
+          $ref: '#/components/schemas/BooleanAttribute'
+        number_existing_insurances:
+          $ref: '#/components/schemas/ListAttribute'
+        accumulated_annual_pensions:
+          $ref: '#/components/schemas/DoubleAttribute'
+        smoker:
+          $ref: '#/components/schemas/BooleanAttribute'
+        professional_data:
+          $ref: '#/components/schemas/PersonalDataProfessionalData'
+      required:
+        - birth_date
+        - productType
+        - professional_data
+        - smoker
+      type: object
+    DateAttribute:
+      description: |-
+        ###### Date attribute including value and meta data
+        ###### <u>Datum-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          allOf:
+            - $ref: '#/components/schemas/custom_date'
+          nullable: true
+        metadata:
+          $ref: '#/components/schemas/DateMetaData'
+      required:
+        - metadata
+      type: object
+    custom_date:
+      description: date
+      example: 1970-12-31
+      format: date
+      type: string
+    DateMetaData:
+      allOf:
+        - $ref: '#/components/schemas/MetaData'
+      description: |-
+        ###### Date meta data
+        ###### <u>Date Metadaten</u>
+      properties:
+        min:
+          allOf:
+            - $ref: '#/components/schemas/custom_date'
+          description: |-
+            ###### Minimum date
+            ###### <u>Minimales Datum</u>
+        max:
+          allOf:
+            - $ref: '#/components/schemas/custom_date'
+          description: |-
+            ###### Maximum date
+            ###### <u>Maximales Datum</u>
+      type: object
+    MetaData:
+      description: |-
+        ###### Meta data
+        ###### <u>Metadaten</u>
+      example:
+        fixed: true
+        validation:
+          msg: msg
+          msg_level: INFO
+        required: true
+      properties:
+        validation:
+          $ref: '#/components/schemas/ValidationMetaData'
+        required:
+          description: |-
+            ###### Required property
+            ###### <u>Erforderliche Eigenschaft</u>
+          type: boolean
+        fixed:
+          description: |-
+            ###### Fixed property
+            ###### <u>Unveränderliche Eigenschaft</u>
+          type: boolean
+      type: object
+    ValidationMetaData:
+      description: |-
+        ###### Validation meta data
+        ###### <u>Validierung Metadaten</u>
+      example:
+        msg: msg
+        msg_level: INFO
+      properties:
+        msg_level:
+          description: |-
+            ###### Validation message level
+            ###### <u>Level der Validierungsnachricht</u>
+          enum:
+            - INFO
+            - WARN
+            - ERROR
+          type: string
+        msg:
+          description: |-
+            ###### Validation message
+            ###### <u>Validierungsnachricht</u>
+          type: string
+      required:
+        - msg
+        - msg_level
+      type: object
+    ListAttribute:
+      description: |-
+        ###### List attribute including value and meta data
+        ###### <u>List-Attribute inkl. Wert und Metadaten</u>
+      example:
+        metadata:
+          options:
+            - fixed: true
+              id: id
+              value: value
+            - fixed: true
+              id: id
+              value: value
+        selectedOption:
+          fixed: true
+          id: id
+          value: value
+      properties:
+        selectedOption:
+          $ref: '#/components/schemas/ListItemMetaData'
+        metadata:
+          $ref: '#/components/schemas/ListMetaData'
+      required:
+        - metadata
+      type: object
+    ListItemMetaData:
+      description: |-
+        ###### Metadata for a list item
+        ###### <u>Metadaten für ein Listenelement</u>
+      example:
+        fixed: true
+        id: id
+        value: value
+      properties:
+        id:
+          description: |-
+            ###### List item value
+            ###### <u>Wert eines Listenelementes</u>
+          type: string
+        value:
+          description: |-
+            ###### List item text
+            ###### <u>Text eines Listenelementes</u>
+          type: string
+        fixed:
+          description: |-
+            ###### Fixed or unselectable property
+            ###### <u>Unveränderliche oder nicht selektierbare Eigenschaft</u>
+          type: boolean
+      required:
+        - id
+        - value
+      type: object
+    ListMetaData:
+      allOf:
+        - $ref: '#/components/schemas/MetaData'
+      description: |-
+        ###### Metadata for list items
+        ###### <u>Metadaten für Listenelemente</u>
+      example:
+        options:
+          - fixed: true
+            id: id
+            value: value
+          - fixed: true
+            id: id
+            value: value
+      properties:
+        options:
+          description: |-
+            ###### All list items
+            ###### <u>Alle Listenelmente</u>
+          items:
+            $ref: '#/components/schemas/ListItemMetaData'
+          type: array
+      required:
+        - options
+      type: object
+    DoubleAttribute:
+      description: |-
+        ###### Number attribute including value and meta data
+        ###### <u>Number-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          format: double
+          nullable: true
+          type: number
+        metadata:
+          $ref: '#/components/schemas/DoubleMetaData'
+      required:
+        - metadata
+      type: object
+    DoubleMetaData:
+      allOf:
+        - $ref: '#/components/schemas/MetaData'
+      description: |-
+        ###### Number meta data
+        ###### <u>Number Metadaten</u>
+      properties:
+        min:
+          description: |-
+            ###### Minimum
+            ###### <u>Minimum</u>
+          format: double
+          type: number
+        max:
+          description: |-
+            ###### Maximum
+            ###### <u>Maximum</u>
+          format: double
+          type: number
+      type: object
+    BooleanAttribute:
+      description: |-
+        ###### Boolean attribute including value and meta data
+        ###### <u>Boolean-Attribute inkl. Wert und Metadaten</u>
+      example:
+        metadata:
+          fixed: true
+          validation:
+            msg: msg
+            msg_level: INFO
+          required: true
+        value: true
+      properties:
+        value:
+          nullable: true
+          type: boolean
+        metadata:
+          $ref: '#/components/schemas/MetaData'
+      required:
+        - metadata
+      type: object
+    PersonalDataProfessionalData:
+      description: |-
+        ###### Professional details
+        ###### <u>Beruflichen Angaben</u>
+      properties:
+        qualification:
+          $ref: '#/components/schemas/ListAttribute'
+        occupation:
+          $ref: '#/components/schemas/ListAttribute'
+        physical_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        travel_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        office_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        employed_since:
+          $ref: '#/components/schemas/DateAttribute'
+        personnel_responsibility:
+          $ref: '#/components/schemas/IntegerAttribute'
+        educational_attainment:
+          $ref: '#/components/schemas/ListAttribute'
+        education:
+          $ref: '#/components/schemas/ListAttribute'
+        risk_group:
+          description: |-
+            ###### Determined risk group
+            ###### <u>Ermittelte Risikogruppe</u>
+          type: string
+        risk_group_ratio:
+          description: |-
+            ###### Determined risk group ratio
+            ###### <u>Ermittelter Risikogruppenanteil</u>
+          type: integer
+        scoring_risk_group:
+          description: |-
+            ###### Scoring risk group
+            ###### <u>Risikogruppe aus Scoring Service</u>
+          type: string
+        scoring_risk_group_ratio:
+          description: |-
+            ###### Scoring risk group ratio
+            ###### <u>Risikogruppenanteil aus Scoring Service</u>
+          type: integer
+        max_pension:
+          description: |-
+            ###### Scoring max pension
+            ###### <u>maxPension aus Scoring Service</u>
+          type: integer
+        final_age:
+          description: |-
+            ###### Scoring final age
+            ###### <u>finalAge aus Scoring Service</u>
+          type: integer
+        max_entry_age:
+          description: |-
+            ###### Scoring max entry age
+            ###### <u>maxEntryAge aus Scoring Service</u>
+          type: integer
+      required:
+        - occupation
+        - qualification
+      type: object
+    IntegerAttribute:
+      description: |-
+        ###### Integer attribute including value and meta data
+        ###### <u>Integer-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          nullable: true
+          type: integer
+        metadata:
+          $ref: '#/components/schemas/IntegerMetaData'
+      required:
+        - metadata
+      type: object
+    IntegerMetaData:
+      allOf:
+        - $ref: '#/components/schemas/MetaData'
+      description: |-
+        ###### Integer meta data
+        ###### <u>Integer Metadaten</u>
+      properties:
+        min:
+          description: |-
+            ###### Minimum
+            ###### <u>Minimum</u>
+          type: integer
+        max:
+          description: |-
+            ###### Maximum
+            ###### <u>Maximum</u>
+          type: integer
+      type: object
+    ApiError:
+      description: |-
+        ###### API rror
+        ###### <u>API Fehler</u>
+      example:
+        code: code
+        message: message
+      properties:
+        code:
+          description: |-
+            ###### Error code
+            ###### <u>Fehlercode</u>
+          type: string
+        message:
+          description: |-
+            ###### Error message
+            ###### <u>Fehlernachricht</u>
+          type: string
+      required:
+        - code
+        - message
+      type: object
+    TariffDataResponse:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/TariffDataOD'
+        propertyName: product_type
+      example:
+        product_type: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    TariffDataOD:
+      allOf:
+        - $ref: '#/components/schemas/TariffDataResponse'
+      description: |-
+        ###### Data for an occupational disability tariff
+        ###### <u>Daten für ein Berufsunfähigkeitstarif</u>
+      properties:
+        general_options:
+          $ref: '#/components/schemas/TariffDataGeneralOptions'
+        dynamic_options:
+          $ref: '#/components/schemas/TariffDataDynamicOptions'
+        other_options:
+          $ref: '#/components/schemas/TariffDataOtherOptions'
+        risk_options:
+          $ref: '#/components/schemas/TariffDataRiskOptions'
+        calculation_result:
+          $ref: '#/components/schemas/TariffDataCalculationResult'
+      required:
+        - dynamic_options
+        - general_options
+        - other_options
+        - risk_options
+      type: object
+    TariffDataGeneralOptions:
+      description: Allgemeine Tarifeingaben
+      properties:
+        start_of_insurance:
+          $ref: '#/components/schemas/DateAttributeRequired'
+        final_insurance_age:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+        benefit_expiration:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        benefit_expiration_date:
+          $ref: '#/components/schemas/DateAttributeRequired'
+        benefit_final_age:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+        appropriation_of_surplus:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        contract_type:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        type_of_specification:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        premium_collecting_mode:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        value_of_specification:
+          $ref: '#/components/schemas/DoubleAttributeRequired'
+      required:
+        - appropriation_of_surplus
+        - benefit_expiration
+        - benefit_final_age
+        - contract_type
+        - final_insurance_age
+        - premium_collecting_mode
+        - start_of_insurance
+        - type_of_specification
+      type: object
+    DateAttributeRequired:
+      allOf:
+        - $ref: '#/components/schemas/DateAttribute'
+      properties:
+        value:
+          allOf:
+            - $ref: '#/components/schemas/custom_date'
+      required:
+        - metadata
+        - value
+      type: object
+    IntegerAttributeRequired:
+      description: |-
+        ###### Integer attribute including value and meta data
+        ###### <u>Integer-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          type: integer
+        metadata:
+          $ref: '#/components/schemas/IntegerMetaData'
+      required:
+        - metadata
+        - value
+      type: object
+    ListAttributeRequired:
+      description: |-
+        ###### List attribute including value and meta data
+        ###### <u>List-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        selectedOption:
+          $ref: '#/components/schemas/ListItemMetaData'
+        metadata:
+          $ref: '#/components/schemas/ListMetaData'
+      required:
+        - metadata
+        - selectedOption
+      type: object
+    DoubleAttributeRequired:
+      description: |-
+        ###### Number attribute including value and meta data
+        ###### <u>Number-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          format: double
+          type: number
+        metadata:
+          $ref: '#/components/schemas/DoubleMetaData'
+      required:
+        - metadata
+        - value
+      type: object
+    TariffDataDynamicOptions:
+      description: Dynamikoptionen
+      properties:
+        dynamic:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        percentage:
+          $ref: '#/components/schemas/ListAttributeRequired'
+      required:
+        - dynamic
+      type: object
+    BooleanAttributeRequired:
+      description: |-
+        ###### Boolean attribute including value and meta data
+        ###### <u>Boolean-Attribute inkl. Wert und Metadaten</u>
+      properties:
+        value:
+          type: boolean
+        metadata:
+          $ref: '#/components/schemas/MetaData'
+      required:
+        - metadata
+        - value
+      type: object
+    TariffDataOtherOptions:
+      description: Weitere Tarifoptionen
+      properties:
+        target_group_concept:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        rising_pension:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        rate_of_rising_pension:
+          $ref: '#/components/schemas/ListAttribute'
+        benefit_during_sick_leave:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        grace_period:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+      required:
+        - benefit_during_sick_leave
+        - grace_period
+        - rising_pension
+        - target_group_concept
+      type: object
+    TariffDataRiskOptions:
+      description: Risikodaten
+      properties:
+        risk_group:
+          $ref: '#/components/schemas/ListAttribute'
+        risk_group_ratio:
+          $ref: '#/components/schemas/IntegerAttribute'
+        risk_vote_available:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        risk_premium:
+          $ref: '#/components/schemas/IntegerAttribute'
+      required:
+        - risk_vote_available
+      type: object
+    TariffDataCalculationResult:
+      description: |-
+        ###### General result data of a insurance calculation
+        ###### <u>Allgemeine Ergebnisdaten der Kalkulation einer Versicherung</u>
+      properties:
+        premium_net:
+          description: |-
+            ###### Premium per collecting mode (net)
+            ###### <u>Beitrag je Zahlweise (netto)</u>
+          type: number
+        premium_gross:
+          description: |-
+            ###### Premium per collecting mode (gross)
+            ###### <u>Beitrag je Zahlweise (brutto)</u>
+          type: number
+        pension:
+          description: |-
+            ###### Pension (monthly)
+            ###### <u>Rente (monatlich)</u>
+          type: number
+      required:
+        - pension
+        - premium_gross
+        - premium_net
+      type: object
+    PersonalDataValidation:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/PersonalDataValidationOD'
+        propertyName: product_type
+      example:
+        product_type: product_type
+        changed_attribute: changed_attribute
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+        changed_attribute:
+          description: |-
+            ###### A personal data attribute that is required for partial validation
+            ###### <u>Ein Personendaten-Attribut, welches für eine partielle Validierung benötigt wird</u>
+          type: string
+          writeOnly: true
+      required:
+        - changed_attribute
+        - product_type
+      type: object
+    PersonalDataValidationOD:
+      allOf:
+        - $ref: '#/components/schemas/PersonalDataValidation'
+      description: |-
+        ###### Personal data for validation
+        ###### <u>Personendaten zur Validierung</u>
+      properties:
+        offer:
+          $ref: '#/components/schemas/OfferODRequest'
+      required:
+        - offer
+      type: object
+    OfferODRequest:
+      allOf:
+        - $ref: '#/components/schemas/OfferRequest'
+      description: |-
+        ###### An offer contains all the necessary personal and tariff information for a calculation and the creation of a short proposal
+        ###### <u>Ein Angebot enthält alle notwendigen persönlichen und tariflichen Angaben für eine Kalkulation und eine Erstellung eines Kurzangebots</u>
+      properties:
+        id:
+          description: primary key
+          format: int64
+          readOnly: true
+          type: integer
+        update_date:
+          allOf:
+            - $ref: '#/components/schemas/custom_date_time'
+          description: update timestamp
+        process_id:
+          description: foreign key to process resource
+          format: int64
+          type: integer
+        product:
+          $ref: '#/components/schemas/Product'
+        tariff_data:
+          $ref: '#/components/schemas/TariffDataODRequest'
+        personal_data:
+          $ref: '#/components/schemas/PersonalDataODRequest'
+        risk_data:
+          $ref: '#/components/schemas/RiskData'
+        short_offer_data:
+          $ref: '#/components/schemas/ShortOfferData'
+      required:
+        - personal_data
+        - process_id
+        - productType
+      type: object
+    OfferRequest:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/OfferODRequest'
+        propertyName: product_type
+      example:
+        product_type: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    custom_date_time:
+      description: date-time
+      example: 1970-12-31T17:32:28Z
+      format: date-time
+      type: string
+    Product:
+      description: |-
+        ###### Insurance product
+        ###### <u>Versicherungsprodukt</u>
+      properties:
+        group:
+          description: |-
+            ###### Product group
+            ###### <u>Produktgruppe</u>
+          example: Private Altersvorsorge
+          type: string
+        layer:
+          description: |-
+            ###### Product layer
+            ###### <u>Schicht</u>
+          example: "3"
+          type: string
+        marketing_name:
+          description: |-
+            ###### Markteting name
+            ###### <u>Marketingname</u>
+          example: TOP BU
+          type: string
+        name:
+          description: |-
+            ###### Product name
+            ###### <u>Produktname</u>
+          example: BV
+          type: string
+        tariff_generation:
+          description: |-
+            ###### Tariff generation
+            ###### <u>Tarifgeneration</u>
+          example: BV26
+          type: string
+        tariff:
+          description: |-
+            ###### Tariff abbreviation
+            ###### <u>Tarifkürzel</u>
+          example: NARH22
+          maxLength: 12
+          minLength: 3
+          type: string
+      required:
+        - group
+        - layer
+        - marketing_name
+        - name
+        - tariff
+        - tariff_generation
+      type: object
+    TariffDataODRequest:
+      allOf:
+        - $ref: '#/components/schemas/TariffDataRequest'
+      description: |-
+        ###### Data for an occupational disability tariff
+        ###### <u>Daten für ein Berufsunfähigkeitstarif</u>
+      properties:
+        general_options:
+          $ref: '#/components/schemas/TariffDataGeneralOptionsRequest'
+        dynamic_options:
+          $ref: '#/components/schemas/TariffDataDynamicOptionsRequest'
+        other_options:
+          $ref: '#/components/schemas/TariffDataOtherOptionsRequest'
+        risk_options:
+          $ref: '#/components/schemas/TariffDataRiskOptionsRequest'
+        calculation_result:
+          $ref: '#/components/schemas/TariffDataCalculationResult'
+      required:
+        - dynamic_options
+        - general_options
+        - other_options
+        - risk_options
+      type: object
+    TariffDataRequest:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/TariffDataODRequest'
+        propertyName: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    TariffDataGeneralOptionsRequest:
+      allOf:
+        - $ref: '#/components/schemas/TariffDataGeneralOptions'
+      description: Allgemeine Tarifeingaben
+      properties:
+        start_of_insurance:
+          $ref: '#/components/schemas/DateAttributeRequired'
+        final_insurance_age:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+        benefit_expiration:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        benefit_expiration_date:
+          $ref: '#/components/schemas/DateAttributeRequired'
+        benefit_final_age:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+        appropriation_of_surplus:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        contract_type:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        type_of_specification:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        premium_collecting_mode:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        value_of_specification:
+          $ref: '#/components/schemas/DoubleAttributeRequired'
+      required:
+        - appropriation_of_surplus
+        - benefit_expiration
+        - benefit_final_age
+        - contract_type
+        - final_insurance_age
+        - premium_collecting_mode
+        - start_of_insurance
+        - type_of_specification
+      type: object
+    TariffDataDynamicOptionsRequest:
+      description: Dynamikoptionen
+      properties:
+        dynamic:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        percentage:
+          $ref: '#/components/schemas/ListAttributeRequired'
+      required:
+        - dynamic
+      type: object
+    TariffDataOtherOptionsRequest:
+      description: Weitere Tarifoptionen
+      properties:
+        target_group_concept:
+          $ref: '#/components/schemas/ListAttributeRequired'
+        rising_pension:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        rate_of_rising_pension:
+          $ref: '#/components/schemas/ListAttribute'
+        benefit_during_sick_leave:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        grace_period:
+          $ref: '#/components/schemas/IntegerAttributeRequired'
+      required:
+        - benefit_during_sick_leave
+        - grace_period
+        - rising_pension
+        - target_group_concept
+      type: object
+    TariffDataRiskOptionsRequest:
+      description: Risikodaten
+      properties:
+        risk_group:
+          $ref: '#/components/schemas/ListAttribute'
+        risk_group_ratio:
+          $ref: '#/components/schemas/IntegerAttribute'
+        risk_vote_available:
+          $ref: '#/components/schemas/BooleanAttributeRequired'
+        risk_premium:
+          $ref: '#/components/schemas/IntegerAttribute'
+      required:
+        - risk_vote_available
+      type: object
+    PersonalDataODRequest:
+      allOf:
+        - $ref: '#/components/schemas/PersonalDataRequest'
+      description: |-
+        ###### Short offer
+        ###### <u>Angaben zum Kurzangebot</u> Persönliche Angaben zum Angebot
+      properties:
+        birth_date:
+          $ref: '#/components/schemas/DateAttribute'
+        gender:
+          $ref: '#/components/schemas/ListAttribute'
+        gross_annual_income:
+          $ref: '#/components/schemas/DoubleAttribute'
+        existing_insurances:
+          $ref: '#/components/schemas/BooleanAttribute'
+        number_existing_insurances:
+          $ref: '#/components/schemas/ListAttribute'
+        accumulated_annual_pensions:
+          $ref: '#/components/schemas/DoubleAttribute'
+        smoker:
+          $ref: '#/components/schemas/BooleanAttribute'
+        professional_data:
+          $ref: '#/components/schemas/PersonalDataProfessionalDataRequest'
+      required:
+        - productType
+        - professional_data
+      type: object
+    PersonalDataRequest:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/PersonalDataODRequest'
+        propertyName: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    PersonalDataProfessionalDataRequest:
+      description: |-
+        ###### Professional details
+        ###### <u>Beruflichen Angaben</u>
+      properties:
+        qualification:
+          $ref: '#/components/schemas/ListAttribute'
+        occupation:
+          $ref: '#/components/schemas/ListAttribute'
+        physical_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        travel_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        office_job_proportion:
+          $ref: '#/components/schemas/IntegerAttribute'
+        employed_since:
+          $ref: '#/components/schemas/DateAttribute'
+        personnel_responsibility:
+          $ref: '#/components/schemas/IntegerAttribute'
+        educational_attainment:
+          $ref: '#/components/schemas/ListAttribute'
+        education:
+          $ref: '#/components/schemas/ListAttribute'
+        scoring_risk_group:
+          description: |-
+            ###### Scoring risk group
+            ###### <u>Risikogruppe aus Scoring Service</u>
+          type: string
+        scoring_risk_group_ratio:
+          description: |-
+            ###### Scoring risk group ratio
+            ###### <u>Risikogruppenanteil aus Scoring Service</u>
+          type: integer
+        max_pension:
+          description: |-
+            ###### Scoring max pension
+            ###### <u>maxPension aus Scoring Service</u>
+          type: integer
+        final_age:
+          description: |-
+            ###### Scoring final age
+            ###### <u>finalAge aus Scoring Service</u>
+          type: integer
+        max_entry_age:
+          description: |-
+            ###### Scoring max entry age
+            ###### <u>maxEntryAge aus Scoring Service</u>
+          type: integer
+      type: object
+    RiskData:
+      description: |-
+        ###### Risk assessment
+        ###### <u>Risikoprüfung</u>
+      properties:
+        vote:
+          description: |-
+            ###### Vote
+            ###### <u>Votum</u>
+          type: string
+        case_id:
+          description: |-
+            ###### Case-ID
+            ###### <u>Case-ID</u>
+          type: string
+      type: object
+    ShortOfferData:
+      description: |-
+        ###### Short offer data
+        ###### <u>Kurzangebotangaben</u>
+      example:
+        policyholder:
+          salutation:
+            metadata:
+              options:
+                - fixed: true
+                  id: id
+                  value: value
+                - fixed: true
+                  id: id
+                  value: value
+            selectedOption:
+              fixed: true
+              id: id
+              value: value
+          given_name:
+            metadata:
+              minLength: 0
+              maxLength: 6
+            value: value
+          family_name:
+            metadata:
+              minLength: 0
+              maxLength: 6
+            value: value
+        simple:
+          metadata:
+            options:
+              - fixed: true
+                id: id
+                value: value
+              - fixed: true
+                id: id
+                value: value
+          selectedOption:
+            fixed: true
+            id: id
+            value: value
+        extended:
+          metadata:
+            options:
+              - fixed: true
+                id: id
+                value: value
+              - fixed: true
+                id: id
+                value: value
+          selectedOption:
+            fixed: true
+            id: id
+            value: value
+        personalized:
+          metadata:
+            fixed: true
+            validation:
+              msg: msg
+              msg_level: INFO
+            required: true
+          value: true
+        insured_person:
+          salutation:
+            metadata:
+              options:
+                - fixed: true
+                  id: id
+                  value: value
+                - fixed: true
+                  id: id
+                  value: value
+            selectedOption:
+              fixed: true
+              id: id
+              value: value
+          given_name:
+            metadata:
+              minLength: 0
+              maxLength: 6
+            value: value
+          family_name:
+            metadata:
+              minLength: 0
+              maxLength: 6
+            value: value
+        alternative_policyholder:
+          metadata:
+            fixed: true
+            validation:
+              msg: msg
+              msg_level: INFO
+            required: true
+          value: true
+      properties:
+        simple:
+          $ref: '#/components/schemas/ListAttribute'
+        extended:
+          $ref: '#/components/schemas/ListAttribute'
+        personalized:
+          $ref: '#/components/schemas/BooleanAttribute'
+        alternative_policyholder:
+          $ref: '#/components/schemas/BooleanAttribute'
+        policyholder:
+          $ref: '#/components/schemas/ShortOfferPerson'
+        insured_person:
+          $ref: '#/components/schemas/ShortOfferPerson'
+      type: object
+    ShortOfferPerson:
+      allOf:
+        - $ref: '#/components/schemas/Person1'
+      description: |-
+        ###### Short offer person
+        ###### <u>Kurzangebotperson</u>
+      example:
+        salutation:
+          metadata:
+            options:
+              - fixed: true
+                id: id
+                value: value
+              - fixed: true
+                id: id
+                value: value
+          selectedOption:
+            fixed: true
+            id: id
+            value: value
+        given_name:
+          metadata:
+            minLength: 0
+            maxLength: 6
+          value: value
+        family_name:
+          metadata:
+            minLength: 0
+            maxLength: 6
+          value: value
+      type: object
+    Person1:
+      description: |-
+        ###### Personal details
+        ###### <u>Personenangaben</u>
+      properties:
+        given_name:
+          $ref: '#/components/schemas/StringAttribute'
+        family_name:
+          $ref: '#/components/schemas/StringAttribute'
+        salutation:
+          $ref: '#/components/schemas/ListAttribute'
+      type: object
+    StringAttribute:
+      description: |-
+        ###### String attribute including value and meta data
+        ###### <u>String-Attribute inkl. Wert und Metadaten</u>
+      example:
+        metadata:
+          minLength: 0
+          maxLength: 6
+        value: value
+      properties:
+        value:
+          nullable: true
+          type: string
+        metadata:
+          $ref: '#/components/schemas/StringMetaData'
+      required:
+        - metadata
+      type: object
+    StringMetaData:
+      allOf:
+        - $ref: '#/components/schemas/MetaData'
+      description: |-
+        ###### String meta data
+        ###### <u>String Metadaten</u>
+      example:
+        minLength: 0
+        maxLength: 6
+      properties:
+        minLength:
+          description: |-
+            ###### Minimum length
+            ###### <u>Min Länge</u>
+          type: integer
+        maxLength:
+          description: |-
+            ###### Maximum length
+            ###### <u>Max Länge</u>
+          type: integer
+      type: object
+    OfferResponse:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/OfferODResponse'
+        propertyName: product_type
+      example:
+        product_type: product_type
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+      type: object
+    OfferODResponse:
+      allOf:
+        - $ref: '#/components/schemas/OfferResponse'
+      description: |-
+        ###### An offer contains all the necessary personal and tariff information for a calculation and the creation of a short proposal
+        ###### <u>Ein Angebot enthält alle notwendigen persönlichen und tariflichen Angaben für eine Kalkulation und eine Erstellung eines Kurzangebots</u>
+      properties:
+        id:
+          description: primary key
+          format: int64
+          readOnly: true
+          type: integer
+        update_date:
+          allOf:
+            - $ref: '#/components/schemas/custom_date_time'
+          description: update timestamp
+          readOnly: true
+        process_id:
+          description: foreign key to process resource
+          format: int64
+          type: integer
+        product:
+          $ref: '#/components/schemas/Product'
+        tariff_data:
+          $ref: '#/components/schemas/TariffDataOD'
+        personal_data:
+          $ref: '#/components/schemas/PersonalDataOD'
+        risk_data:
+          $ref: '#/components/schemas/RiskData'
+        short_offer_data:
+          $ref: '#/components/schemas/ShortOfferData'
+      required:
+        - id
+        - personal_data
+        - process_id
+        - productType
+        - update_date
+      type: object
+    OfferCalculation:
+      discriminator:
+        mapping:
+          OD: '#/components/schemas/OfferCalculationOD'
+        propertyName: product_type
+      example:
+        product_type: product_type
+        validation_only: true
+        changed_attribute: changed_attribute
+      properties:
+        product_type:
+          description: Discriminator property
+          type: string
+        validation_only:
+          description: |-
+            ###### A flag to control if a validation without calculation should be performed
+            ###### <u>Flag zu Steuerung, ob nur eine Validierung ohne Berechnung durchgeführt werden soll</u>
+          type: boolean
+        changed_attribute:
+          description: |-
+            ###### A tariff attribute that is required for partial product validation
+            ###### <u>Ein Tarifattribut, welches für eine partielle Produktvalidierung benötigt wird</u>
+          type: string
+          writeOnly: true
+      required:
+        - changed_attribute
+        - product_type
+        - validation_only
+      type: object
+    OfferCalculationOD:
+      allOf:
+        - $ref: '#/components/schemas/OfferCalculation'
+      description: |-
+        ###### An offer contains all the necessary personal and tariff information for a calculation and the creation of a short proposal
+        ###### <u>Ein Angebot enthält alle notwendigen persönlichen und tariflichen Angaben für eine Kalkulation und eine Erstellung eines Kurzangebots</u>
+      properties:
+        offer:
+          $ref: '#/components/schemas/OfferODRequest'
+      required:
+        - offer
+      type: object

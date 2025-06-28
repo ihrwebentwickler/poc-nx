@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { person$, PersonState } from '../stores/person.store';

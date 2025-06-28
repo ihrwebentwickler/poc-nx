@@ -1,1 +1,6 @@
-@import "tailwindcss";
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background: aqua !important;
+}

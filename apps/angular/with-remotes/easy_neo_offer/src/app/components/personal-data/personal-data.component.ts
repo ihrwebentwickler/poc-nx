@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { setName } from '../../stores/person.store';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../interfaces/app';
+import { getOffer, OfferResponse } from '../../generated-open-api/offerService';
+import { catchError, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-easy-neo-personal-data',
@@ -40,7 +42,26 @@ export class PersonalDataComponent implements OnInit {
     this.activatedRoute.data.subscribe((response: any) => {
       this.products = response.products;
     });
+
+    // this.getOfferByIdBE(1);
   }
+
+  // async getOfferById(id: number): Promise<void> {
+  //   try {
+  //     const offer$ = await this.getOfferByIdBE(1);
+  //   } catch (error) {
+  //     console.error('Fehler:', error);
+  //   }
+  // }
+  //
+  // getOfferByIdBE(id: number): Observable<OfferResponse> {
+  //   return getOffer(id).pipe(
+  //     catchError((error) => {
+  //       console.error('Fehler:', error);
+  //       throw error;
+  //     }),
+  //   );
+  // }
 
   updatePersonalStore(): void {
     setName(this.personName);
