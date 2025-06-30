@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AppRoute } from '../../interfaces/app';
 import { person$, PersonState } from '../../stores/person.store';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { TestTokenService } from '../../services/test-token.service';

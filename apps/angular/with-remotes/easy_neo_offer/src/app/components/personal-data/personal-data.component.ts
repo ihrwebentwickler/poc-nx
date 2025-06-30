@@ -7,8 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { setName } from '../../stores/person.store';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../interfaces/app';
-import { getOffer, OfferResponse } from '../../generated-open-api/offerService';
-import { catchError, map, Observable } from 'rxjs';
+import { OfferResponseDTO, OffersService } from '../../api-offer-client';
 
 @Component({
   selector: 'app-easy-neo-personal-data',
@@ -18,17 +17,18 @@ import { catchError, map, Observable } from 'rxjs';
 })
 export class PersonalDataComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
+  offersService = inject(OffersService);
   testTokenService = inject(TestTokenService);
   swapiService = inject(SwapiService);
 
   cats!: any;
   personName = 'Jan';
   products!: Product[];
+  offers!: OfferResponseDTO;
 
   public ngOnInit(): void {
     const test = this.testTokenService.getBasePath();
-    console.log(' TOKEN BASE_PATH hat den Wert:');
-    console.log(test);
+    console.log('TOKEN BASE_PATH hat den Wert: ' + test);
 
     this.swapiService.getCats().subscribe({
       next: (data) => {
@@ -44,6 +44,8 @@ export class PersonalDataComponent implements OnInit {
     });
 
     // this.getOfferByIdBE(1);
+
+    this.getOffersByOldWay();
   }
 
   // async getOfferById(id: number): Promise<void> {
@@ -65,5 +67,16 @@ export class PersonalDataComponent implements OnInit {
 
   updatePersonalStore(): void {
     setName(this.personName);
+  }
+
+  getOffersByOldWay() {
+    this.offersService.getOffer(123).subscribe({
+      next: (data) => {
+        this.offers = data;
+      },
+      error: (err) => {
+        console.log(err.message || 'Fehler beim Laden');
+      },
+    });
   }
 }
